@@ -1,0 +1,14 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "W1ozIRiRsTxt-oIYS0Ete"
+uri = "file://artifacts/landing-page/src/assets/images/hero-abstract.png"
+type = "image"
+title = "abstract dark fluid neon shapes"
+
+[[generated]]
+id = "CkuFIkHjo9Z8rpob5XxBG"
+uri = "file://artifacts/landing-page/src/assets/images/studio-work.png"
+type = "image"
+title = "modern sleek dark studio workspace"
