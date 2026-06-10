@@ -2,15 +2,21 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage, type Lang } from "@/contexts/language-context";
+
+const LANGS: { code: Lang; label: string }[] = [
+  { code: "fr", label: "FR" },
+  { code: "en", label: "EN" },
+  { code: "ar", label: "ع" },
+];
 
 export function Navbar() {
+  const { t, lang, setLang } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -28,16 +34,34 @@ export function Navbar() {
 
         <nav className="hidden md:flex items-center gap-8">
           <Link href="#programme" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors" data-testid="link-programme">
-            Programme
+            {t.nav.programme}
           </Link>
           <Link href="#pour-qui" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors" data-testid="link-pour-qui">
-            Pour qui
+            {t.nav.pourQui}
           </Link>
           <Link href="#temoignages" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors" data-testid="link-temoignages">
-            Témoignages
+            {t.nav.temoignages}
           </Link>
+
+          <div className="flex items-center gap-1 border border-white/10 rounded-full px-1 py-1" data-testid="lang-switcher">
+            {LANGS.map(({ code, label }) => (
+              <button
+                key={code}
+                onClick={() => setLang(code)}
+                data-testid={`lang-${code}`}
+                className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
+                  lang === code
+                    ? "bg-primary text-white"
+                    : "text-muted-foreground hover:text-white"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           <Button variant="default" className="rounded-full bg-white text-black hover:bg-white/90" data-testid="button-nav-cta">
-            Réserver une session
+            {t.nav.cta}
             <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         </nav>
@@ -54,16 +78,33 @@ export function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-20 left-0 w-full bg-background border-b border-border p-6 flex flex-col gap-4 shadow-2xl">
           <Link href="#programme" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
-            Programme
+            {t.nav.programme}
           </Link>
           <Link href="#pour-qui" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
-            Pour qui
+            {t.nav.pourQui}
           </Link>
           <Link href="#temoignages" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
-            Témoignages
+            {t.nav.temoignages}
           </Link>
-          <Button variant="default" className="w-full mt-4 rounded-none bg-primary text-primary-foreground">
-            Réserver une session
+
+          <div className="flex items-center gap-2 pt-2">
+            {LANGS.map(({ code, label }) => (
+              <button
+                key={code}
+                onClick={() => setLang(code)}
+                className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                  lang === code
+                    ? "bg-primary border-primary text-white"
+                    : "border-white/20 text-muted-foreground hover:text-white"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <Button variant="default" className="w-full mt-2 rounded-none bg-primary text-primary-foreground">
+            {t.nav.cta}
           </Button>
         </div>
       )}
