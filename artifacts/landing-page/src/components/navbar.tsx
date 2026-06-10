@@ -32,24 +32,24 @@ export function Navbar() {
           TeachIn<span className="text-primary">English</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
-          <Link href="#programme" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors" data-testid="link-programme">
+        <nav className="hidden md:flex items-center gap-6">
+          <Link href="#programme" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap" data-testid="link-programme">
             {t.nav.programme}
           </Link>
-          <Link href="#pour-qui" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors" data-testid="link-pour-qui">
+          <Link href="#pour-qui" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap" data-testid="link-pour-qui">
             {t.nav.pourQui}
           </Link>
-          <Link href="#temoignages" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors" data-testid="link-temoignages">
+          <Link href="#temoignages" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap" data-testid="link-temoignages">
             {t.nav.temoignages}
           </Link>
 
-          <div className="flex items-center gap-1 border border-white/10 rounded-full px-1 py-1" data-testid="lang-switcher">
+          <div className="flex items-center gap-0.5 border border-white/10 rounded-full px-1 py-1 shrink-0" data-testid="lang-switcher">
             {LANGS.map(({ code, label }) => (
               <button
                 key={code}
                 onClick={() => setLang(code)}
                 data-testid={`lang-${code}`}
-                className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
+                className={`px-2.5 py-1 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
                   lang === code
                     ? "bg-primary text-white"
                     : "text-muted-foreground hover:text-white"
@@ -60,7 +60,7 @@ export function Navbar() {
             ))}
           </div>
 
-          <Button variant="default" className="rounded-full bg-white text-black hover:bg-white/90" data-testid="button-nav-cta">
+          <Button variant="default" size="sm" className="rounded-full bg-white text-black hover:bg-white/90 whitespace-nowrap shrink-0" data-testid="button-nav-cta">
             {t.nav.cta}
             <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
