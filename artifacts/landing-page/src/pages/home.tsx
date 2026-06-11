@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Video, BookOpen, GraduationCap, Users, CheckCircle, Microscope, ChevronDown } from "lucide-react";
 import { useRef, useState } from "react";
+import { useLocation } from "wouter";
 import heroAbstract from "@/assets/images/hero-abstract.png";
 import studioWork from "@/assets/images/studio-work.png";
 import { useLanguage } from "@/contexts/language-context";
@@ -50,6 +51,7 @@ function FaqItem({ question, answer, index, isRtl }: { question: string; answer:
 
 export default function Home() {
   const { t, isRtl } = useLanguage();
+  const [, navigate] = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
@@ -89,7 +91,11 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={fadeInUp} className={`flex flex-wrap items-center gap-6 ${isRtl ? "flex-row-reverse" : ""}`}>
-              <button data-testid="button-start-free" className="h-14 px-8 bg-white text-black rounded-full font-medium text-lg hover:bg-white/90 transition-colors flex items-center gap-2 group">
+              <button
+                data-testid="button-start-free"
+                onClick={() => navigate("/auth")}
+                className="h-14 px-8 bg-white text-black rounded-full font-medium text-lg hover:bg-white/90 transition-colors flex items-center gap-2 group"
+              >
                 {t.hero.ctaPrimary}
                 <ArrowRight className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRtl ? "rotate-180" : ""}`} />
               </button>
