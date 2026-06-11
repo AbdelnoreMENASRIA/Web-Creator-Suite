@@ -12,3 +12,9 @@ id = "CkuFIkHjo9Z8rpob5XxBG"
 uri = "file://artifacts/landing-page/src/assets/images/studio-work.png"
 type = "image"
 title = "modern sleek dark studio workspace"
+
+[[generated]]
+id = "5wvDqkdUSHfGqixrddWkU"
+uri = "file://attached_assets/generated_images/a_confident_algerian_university_1b84.png"
+type = "image"
+title = "generated_image"
