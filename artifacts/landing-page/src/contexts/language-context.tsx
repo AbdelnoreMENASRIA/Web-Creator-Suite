@@ -7,7 +7,7 @@ export const translations = {
     nav: {
       programme: "Programme",
       pourQui: "Pour qui",
-      temoignages: "Témoignages",
+      temoignages: "FAQ",
       cta: "Réserver une session",
     },
     hero: {
@@ -21,7 +21,7 @@ export const translations = {
       subtitleMid2: " et ",
       subtitleBold3: "personnels universitaires",
       subtitleEnd: " algériens pour maîtriser l'anglais académique et professionnel via des vidéoconférences en direct avec des experts certifiés.",
-      ctaPrimary: "Commencer gratuitement",
+      ctaPrimary: "Commencer maintenant",
       ctaSecondary: "Découvrir le programme",
     },
     pourQui: {
@@ -31,9 +31,9 @@ export const translations = {
       p1: "TeachInEnglish ne s'adresse pas au grand public. Notre programme est entièrement calibré pour les besoins réels du monde académique algérien : cours magistraux en anglais, publications scientifiques, conférences internationales et communication institutionnelle.",
       p2: "Chaque session vidéo est menée par un formateur expert en anglais académique, adapté à votre discipline et à votre niveau.",
       stat1Val: "3 200+",
-      stat1Label: "Participants formés",
+      stat1Label: "Inscrits attendus",
       stat2Val: "47",
-      stat2Label: "Universités partenaires",
+      stat2Label: "Wilayas couvertes",
       imgAlt: "Session de formation en vidéoconférence",
     },
     programme: {
@@ -48,15 +48,17 @@ export const translations = {
         { title: "Attestation Officielle", desc: "Recevez une attestation de formation reconnue, valorisable dans votre dossier professionnel et académique." },
       ],
     },
-    temoignages: {
-      title: "Ils témoignent.",
-      subtitle: "Des enseignants et doctorants algériens qui ont transformé leur carrière.",
-      cta: "Voir tous les témoignages",
+    faq: {
+      tag: "Questions fréquentes",
+      title: "Vous avez des questions ?",
+      subtitle: "Tout ce qu'il faut savoir avant de rejoindre TeachInEnglish.",
       items: [
-        { name: "Dr. Amira Benali", role: "Maître de conférences, Université d'Oran", quote: "Grâce à TeachInEnglish, j'ai pu dispenser mes cours de chimie en anglais dès le premier semestre. La méthode par vidéoconférence m'a permis d'avancer à mon rythme." },
-        { name: "Yacine Meziani", role: "Doctorant en informatique, USTHB Alger", quote: "J'ai présenté ma communication à une conférence internationale à Barcelone. Sans TeachInEnglish, je n'aurais jamais osé. Le formateur a simulé des Q&A réels avec moi." },
-        { name: "Prof. Fatima Zahra Aïssa", role: "Professeure, Université de Constantine", quote: "La plateforme comprend les spécificités du monde académique algérien. Ce n'est pas un simple cours d'anglais général, c'est une formation taillée pour notre réalité." },
-        { name: "Khaled Oussedik", role: "Enseignant-chercheur, Université de Tlemcen", quote: "J'ai soumis deux articles en anglais à des revues indexées dans les 6 mois suivant ma formation. Le module sur la rédaction scientifique est exceptionnel." },
+        { q: "À qui s'adresse TeachInEnglish ?", a: "Exclusivement aux enseignants, doctorants et personnels universitaires algériens du secteur de l'enseignement supérieur. La plateforme n'est pas ouverte au grand public." },
+        { q: "Comment se déroulent les sessions ?", a: "Chaque session est une vidéoconférence individuelle en direct avec un formateur certifié. Aucun enregistrement, aucune rediffusion. Vous choisissez le jour et l'heure qui vous conviennent." },
+        { q: "Quel est le niveau d'anglais requis pour commencer ?", a: "Aucun niveau minimum requis. Un test de positionnement est réalisé lors de votre première session pour adapter le programme à votre niveau exact." },
+        { q: "Combien de temps faut-il pour progresser ?", a: "La plupart des participants constatent une progression significative après 8 à 12 sessions. La régularité (1 à 2 sessions par semaine) est le facteur clé." },
+        { q: "Puis-je obtenir une attestation de formation ?", a: "Oui. À l'issue du parcours, vous recevez une attestation officielle de TeachInEnglish valorisable dans votre dossier professionnel et académique." },
+        { q: "Comment réserver ma première session ?", a: "Cliquez sur « Commencer maintenant », remplissez le formulaire en 2 minutes, et un coordinateur vous contacte sous 24h pour planifier votre première session gratuite." },
       ],
     },
     partners: {
@@ -79,7 +81,7 @@ export const translations = {
     nav: {
       programme: "Programme",
       pourQui: "Who is it for",
-      temoignages: "Testimonials",
+      temoignages: "FAQ",
       cta: "Book a session",
     },
     hero: {
@@ -93,7 +95,7 @@ export const translations = {
       subtitleMid2: " and ",
       subtitleBold3: "university staff",
       subtitleEnd: " to master academic and professional English through live video conferences with certified experts.",
-      ctaPrimary: "Start for free",
+      ctaPrimary: "Get started now",
       ctaSecondary: "Explore the programme",
     },
     pourQui: {
@@ -103,9 +105,9 @@ export const translations = {
       p1: "TeachInEnglish is not for the general public. Our programme is entirely calibrated to the real needs of the Algerian academic world: English-medium lectures, scientific publications, international conferences and institutional communication.",
       p2: "Every video session is led by an expert trainer in academic English, adapted to your discipline and your level.",
       stat1Val: "3,200+",
-      stat1Label: "Trained participants",
+      stat1Label: "Expected enrolments",
       stat2Val: "47",
-      stat2Label: "Partner universities",
+      stat2Label: "Wilayas covered",
       imgAlt: "Live video conference training session",
     },
     programme: {
@@ -120,15 +122,17 @@ export const translations = {
         { title: "Official Certificate", desc: "Receive a recognised training certificate to enhance your professional and academic portfolio." },
       ],
     },
-    temoignages: {
-      title: "They speak up.",
-      subtitle: "Algerian teachers and doctoral students who transformed their careers.",
-      cta: "View all testimonials",
+    faq: {
+      tag: "FAQ",
+      title: "Got questions?",
+      subtitle: "Everything you need to know before joining TeachInEnglish.",
       items: [
-        { name: "Dr. Amira Benali", role: "Associate Professor, University of Oran", quote: "Thanks to TeachInEnglish, I was able to deliver my chemistry lectures in English from the very first semester. The video conference method let me progress at my own pace." },
-        { name: "Yacine Meziani", role: "PhD student in Computer Science, USTHB Algiers", quote: "I presented my paper at an international conference in Barcelona. Without TeachInEnglish I would never have dared. The trainer ran realistic Q&A simulations with me." },
-        { name: "Prof. Fatima Zahra Aïssa", role: "Professor, University of Constantine", quote: "The platform understands the specificities of the Algerian academic world. This is not a generic English course — it's training tailored to our reality." },
-        { name: "Khaled Oussedik", role: "Researcher-teacher, University of Tlemcen", quote: "I submitted two English articles to indexed journals within 6 months of my training. The scientific writing module is outstanding." },
+        { q: "Who is TeachInEnglish for?", a: "Exclusively for Algerian teachers, doctoral students, and university staff in higher education. The platform is not open to the general public." },
+        { q: "How do the sessions work?", a: "Each session is a live one-on-one video conference with a certified trainer. No recordings, no replays. You choose the day and time that suits you." },
+        { q: "What level of English do I need to start?", a: "No minimum level required. A placement assessment is conducted in your first session to tailor the programme exactly to your level." },
+        { q: "How long does it take to progress?", a: "Most participants see significant progress after 8 to 12 sessions. Consistency — 1 to 2 sessions per week — is the key factor." },
+        { q: "Can I get a training certificate?", a: "Yes. At the end of your programme, you receive an official TeachInEnglish certificate that can be included in your professional and academic portfolio." },
+        { q: "How do I book my first session?", a: "Click \"Get started now\", fill in the 2-minute form, and a coordinator will contact you within 24 hours to schedule your free first session." },
       ],
     },
     partners: {
@@ -151,7 +155,7 @@ export const translations = {
     nav: {
       programme: "البرنامج",
       pourQui: "لمن هو",
-      temoignages: "شهادات",
+      temoignages: "FAQ",
       cta: "احجز جلسة",
     },
     hero: {
@@ -165,7 +169,7 @@ export const translations = {
       subtitleMid2: " و",
       subtitleBold3: "العمال الجامعيين",
       subtitleEnd: " الجزائريين لإتقان اللغة الإنجليزية الأكاديمية والمهنية عبر مؤتمرات الفيديو المباشرة مع خبراء معتمدين.",
-      ctaPrimary: "ابدأ مجاناً",
+      ctaPrimary: "ابدأ الآن",
       ctaSecondary: "اكتشف البرنامج",
     },
     pourQui: {
@@ -175,9 +179,9 @@ export const translations = {
       p1: "TeachInEnglish ليست للعموم. برنامجنا مُعايَر بالكامل وفق الاحتياجات الحقيقية للعالم الأكاديمي الجزائري: المحاضرات باللغة الإنجليزية، النشر العلمي، المؤتمرات الدولية، والتواصل المؤسسي.",
       p2: "كل جلسة فيديو يُديرها مدرب متخصص في الإنجليزية الأكاديمية، مكيَّفة مع تخصصك ومستواك.",
       stat1Val: "+3200",
-      stat1Label: "مشارك مُدرَّب",
+      stat1Label: "تسجيل مستهدف",
       stat2Val: "47",
-      stat2Label: "جامعة شريكة",
+      stat2Label: "ولاية مشمولة",
       imgAlt: "جلسة تدريبية عبر مؤتمر الفيديو",
     },
     programme: {
@@ -192,15 +196,17 @@ export const translations = {
         { title: "شهادة رسمية", desc: "احصل على شهادة تكوين معترف بها لتعزيز ملفك المهني والأكاديمي." },
       ],
     },
-    temoignages: {
-      title: "شهاداتهم.",
-      subtitle: "أساتذة وطلاب دكتوراه جزائريون غيّروا مسيرتهم المهنية.",
-      cta: "عرض جميع الشهادات",
+    faq: {
+      tag: "أسئلة شائعة",
+      title: "لديك أسئلة؟",
+      subtitle: "كل ما تحتاج معرفته قبل الانضمام إلى TeachInEnglish.",
       items: [
-        { name: "د. أميرة بن علي", role: "أستاذة محاضرة، جامعة وهران", quote: "بفضل TeachInEnglish تمكنت من تدريس مادة الكيمياء بالإنجليزية منذ الفصل الأول. أسلوب مؤتمر الفيديو أتاح لي التقدم وفق وتيرتي الخاصة." },
-        { name: "ياسين مزياني", role: "طالب دكتوراه في الإعلام الآلي، جامعة هواري بومدين", quote: "قدمت ورقة بحثية في مؤتمر دولي ببرشلونة. بدون TeachInEnglish لم أكن لأجرؤ على ذلك. المدرب أجرى معي محاكاة لأسئلة حقيقية." },
-        { name: "أ. فاطمة الزهراء عيسى", role: "أستاذة، جامعة قسنطينة", quote: "المنصة تفهم خصوصيات الوسط الأكاديمي الجزائري. ليست مجرد دروس إنجليزية عامة، بل تكوين مصمَّم لواقعنا." },
-        { name: "خالد وسديق", role: "أستاذ باحث، جامعة تلمسان", quote: "أرسلت مقالين باللغة الإنجليزية إلى مجلات مُفهرسة في غضون 6 أشهر من تكويني. وحدة الكتابة العلمية استثنائية." },
+        { q: "لمن تُوجَّه TeachInEnglish؟", a: "حصرياً للأساتذة وطلاب الدكتوراه والعمال الجامعيين الجزائريين في قطاع التعليم العالي. المنصة ليست مفتوحة للعموم." },
+        { q: "كيف تسير الجلسات؟", a: "كل جلسة هي مؤتمر فيديو فردي مباشر مع مدرب معتمد. لا تسجيل، لا إعادة بث. أنت تختار اليوم والوقت المناسبين لك." },
+        { q: "ما المستوى المطلوب للبدء؟", a: "لا يُشترط مستوى أدنى. يُجرى تقييم تحديد المستوى خلال جلستك الأولى لتكييف البرنامج وفق مستواك الفعلي." },
+        { q: "كم من الوقت يستغرق التقدم؟", a: "يلاحظ معظم المشاركين تقدماً ملموساً بعد 8 إلى 12 جلسة. الانتظام بواقع جلسة إلى جلستين أسبوعياً هو العامل الحاسم." },
+        { q: "هل يمكنني الحصول على شهادة تكوين؟", a: "نعم. في نهاية المسار، تحصل على شهادة رسمية من TeachInEnglish يمكن إدراجها في ملفك المهني والأكاديمي." },
+        { q: "كيف أحجز جلستي الأولى؟", a: "انقر على «ابدأ الآن»، أكمل النموذج في دقيقتين، وسيتصل بك منسق خلال 24 ساعة لتحديد موعد جلستك الأولى المجانية." },
       ],
     },
     partners: {

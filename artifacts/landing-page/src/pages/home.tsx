@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Video, BookOpen, GraduationCap, Users, Star, CheckCircle, Microscope } from "lucide-react";
-import { useRef } from "react";
+import { ArrowRight, Video, BookOpen, GraduationCap, Users, CheckCircle, Microscope, ChevronDown } from "lucide-react";
+import { useRef, useState } from "react";
 import heroAbstract from "@/assets/images/hero-abstract.png";
 import studioWork from "@/assets/images/studio-work.png";
 import { useLanguage } from "@/contexts/language-context";
@@ -16,7 +16,37 @@ const staggerContainer = {
 };
 
 const PROGRAMME_ICONS = [BookOpen, Microscope, GraduationCap, Video, Users, CheckCircle];
-const TESTIMONIAL_COLORS = ["from-purple-900", "from-blue-900", "from-emerald-900", "from-rose-900"];
+
+function FaqItem({ question, answer, index, isRtl }: { question: string; answer: string; index: number; isRtl: boolean }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.07 }}
+      viewport={{ once: true }}
+      className="rounded-2xl border border-white/8 bg-card overflow-hidden"
+      data-testid={`faq-item-${index}`}
+    >
+      <button
+        className={`w-full flex items-center justify-between gap-4 p-6 text-left hover:bg-white/5 transition-colors ${isRtl ? "flex-row-reverse text-right" : ""}`}
+        onClick={() => setOpen(!open)}
+        data-testid={`faq-toggle-${index}`}
+      >
+        <span className="text-lg font-semibold text-white leading-snug">{question}</span>
+        <ChevronDown className={`w-5 h-5 text-primary shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+      </button>
+      <motion.div
+        initial={false}
+        animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="overflow-hidden"
+      >
+        <p className={`px-6 pb-6 text-muted-foreground leading-relaxed ${isRtl ? "text-right" : ""}`}>{answer}</p>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 export default function Home() {
   const { t, isRtl } = useLanguage();
@@ -143,46 +173,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TEMOIGNAGES */}
+      {/* FAQ */}
       <section className="py-32" id="temoignages">
         <div className="container mx-auto px-6">
-          <div className={`flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 ${isRtl ? "md:flex-row-reverse" : ""}`}>
-            <div className={isRtl ? "text-right" : ""}>
-              <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">{t.temoignages.title}</h2>
-              <p className="text-xl text-muted-foreground max-w-md">{t.temoignages.subtitle}</p>
-            </div>
-            <button data-testid="button-view-stories" className={`flex items-center gap-2 text-white hover:text-primary transition-colors uppercase tracking-widest text-sm font-bold ${isRtl ? "flex-row-reverse" : ""}`}>
-              {t.temoignages.cta} <ArrowRight className={`w-4 h-4 ${isRtl ? "rotate-180" : ""}`} />
-            </button>
-          </div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className={`max-w-3xl mx-auto ${isRtl ? "text-right" : ""}`}
+          >
+            <motion.p variants={fadeInUp} className="text-sm font-medium text-primary uppercase tracking-widest mb-4 text-center">
+              {t.faq.tag}
+            </motion.p>
+            <motion.h2 variants={fadeInUp} className="text-5xl md:text-7xl font-serif font-bold mb-6 text-center">
+              {t.faq.title}
+            </motion.h2>
+            <motion.p variants={fadeInUp} className="text-xl text-muted-foreground mb-16 text-center">
+              {t.faq.subtitle}
+            </motion.p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {t.temoignages.items.map((testimonial, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true, margin: "-100px" }}
-                className="group"
-                data-testid={`card-temoignage-${i}`}
-              >
-                <div className="relative w-full rounded-2xl overflow-hidden bg-card p-8 border border-white/5 hover:border-primary/30 transition-colors">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${TESTIMONIAL_COLORS[i]} to-black opacity-20 group-hover:opacity-30 transition-opacity duration-500`}></div>
-                  <div className={`relative z-10 ${isRtl ? "text-right" : ""}`}>
-                    <div className={`flex gap-1 mb-6 ${isRtl ? "flex-row-reverse" : ""}`}>
-                      {[...Array(5)].map((_, s) => <Star key={s} className="w-5 h-5 fill-primary text-primary" />)}
-                    </div>
-                    <p className="text-xl text-white/90 leading-relaxed mb-8 font-medium">"{testimonial.quote}"</p>
-                    <div>
-                      <div className="font-bold text-white">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+            <div className="flex flex-col gap-3">
+              {t.faq.items.map((item, i) => (
+                <FaqItem key={i} question={item.q} answer={item.a} index={i} isRtl={isRtl} />
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
