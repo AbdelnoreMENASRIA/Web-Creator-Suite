@@ -10,6 +10,7 @@ import Login from "@/pages/auth/login";
 import ForgotPassword from "@/pages/auth/forgot-password";
 import ResetPassword from "@/pages/auth/reset-password";
 import Dashboard from "@/pages/dashboard";
+import Sessions from "@/pages/sessions";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { LanguageProvider } from "@/contexts/language-context";
@@ -19,14 +20,15 @@ const queryClient = new QueryClient();
 
 function Router() {
   const [location] = useLocation();
-  const isAuthOrDashboard = location.startsWith("/auth") || location === "/dashboard";
+  const isStandalone = location.startsWith("/auth") || location === "/dashboard" || location === "/sessions";
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground dark">
-      {!isAuthOrDashboard && <Navbar />}
+      {!isStandalone && <Navbar />}
       <main className="flex-1">
         <Switch>
           <Route path="/" component={Home} />
+          <Route path="/sessions" component={Sessions} />
           <Route path="/auth" component={RoleSelect} />
           <Route path="/auth/register" component={Register} />
           <Route path="/auth/login" component={Login} />
@@ -36,7 +38,7 @@ function Router() {
           <Route component={NotFound} />
         </Switch>
       </main>
-      {!isAuthOrDashboard && <Footer />}
+      {!isStandalone && <Footer />}
     </div>
   );
 }

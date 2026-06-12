@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Video, BookOpen, GraduationCap, Users, CheckCircle, Microscope, ChevronDown } from "lucide-react";
-import { useRef, useState } from "react";
+import { ArrowRight, Video, BookOpen, GraduationCap, Users, CheckCircle, Microscope, ChevronDown, Calendar, Clock, Building2 } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import heroAbstract from "@/assets/images/hero-abstract.png";
 import studioWork from "@/assets/images/studio-work.png";
@@ -49,10 +49,29 @@ function FaqItem({ question, answer, index, isRtl }: { question: string; answer:
   );
 }
 
+interface PreviewSession {
+  id: string; titre: string; specialiteCible: string;
+  dateSession: string; heureDebut: string; dureeMinutes: number;
+  placesMax: number; inscrits: number; statut: string;
+  formateurPrenom: string | null; formateurNom: string | null;
+  formateurId: string; formateurUniversite: string | null;
+}
+
 export default function Home() {
   const { t, isRtl } = useLanguage();
   const [, navigate] = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [previewSessions, setPreviewSessions] = useState<PreviewSession[]>([]);
+
+  useEffect(() => {
+    fetch("/api/sessions")
+      .then((r) => r.json())
+      .then((d) => {
+        const live = (d.sessions ?? []).filter((s: PreviewSession) => s.statut === "en_cours" || s.statut === "planifiee");
+        setPreviewSessions(live.slice(0, 4));
+      })
+      .catch(() => {});
+  }, []);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -176,6 +195,104 @@ export default function Home() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* SESSIONS PREVIEW */}
+      <section className="py-32 bg-card/30" id="sessions">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="mb-12"
+          >
+            <motion.p variants={fadeInUp} className="text-sm font-medium text-primary uppercase tracking-widest mb-4">
+              Sessions disponibles
+            </motion.p>
+            <div className="flex items-end justify-between flex-wrap gap-4">
+              <motion.h2 variants={fadeInUp} className="text-5xl md:text-6xl font-serif font-bold text-white">
+                Formations en direct
+              </motion.h2>
+              <motion.button
+                variants={fadeInUp}
+                onClick={() => navigate("/sessions")}
+                className="flex items-center gap-2 h-12 px-6 rounded-full bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors shrink-0"
+              >
+                Voir toutes les sessions <ArrowRight className="w-4 h-4" />
+              </motion.button>
+            </div>
+            <motion.p variants={fadeInUp} className="mt-4 text-lg text-muted-foreground max-w-2xl">
+              Des formateurs certifiés du département d'Anglais animent des vidéoconférences adaptées à chaque discipline.
+            </motion.p>
+          </motion.div>
+
+          {previewSessions.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="rounded-3xl border border-white/5 bg-background/50 py-20 text-center"
+            >
+              <Video className="w-14 h-14 mx-auto mb-4 text-white/10" />
+              <p className="text-white/50 text-sm">Les prochaines sessions seront publiées bientôt</p>
+              <button onClick={() => navigate("/sessions")} className="mt-6 text-primary text-sm hover:underline">
+                Voir la page des sessions →
+              </button>
+            </motion.div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {previewSessions.map((s, i) => (
+                <motion.div
+                  key={s.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="rounded-3xl border border-white/8 bg-card p-6 flex flex-col gap-4 hover:border-primary/30 transition-all cursor-pointer group"
+                  onClick={() => navigate("/sessions")}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      {s.statut === "en_cours" && (
+                        <div className="flex items-center gap-1.5 text-green-400 text-xs font-medium mb-2">
+                          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" /> En cours maintenant
+                        </div>
+                      )}
+                      <h3 className="text-base font-bold text-white leading-snug mb-1">{s.titre}</h3>
+                      <p className="text-xs text-primary font-medium">Pour les {s.specialiteCible}</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                      <Video className="w-5 h-5 text-primary" />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" />{s.dateSession}</span>
+                    <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{s.heureDebut} • {s.dureeMinutes} min</span>
+                    <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" />{s.inscrits}/{s.placesMax}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-7 h-7 rounded-lg bg-accent/20 flex items-center justify-center">
+                        <GraduationCap className="w-3.5 h-3.5 text-accent" />
+                      </div>
+                      <div>
+                        <span className="text-white font-medium">{s.formateurPrenom} {s.formateurNom}</span>
+                        <span className="text-muted-foreground ml-1.5 font-mono">{s.formateurId}</span>
+                        <div className="flex items-center gap-1 text-muted-foreground mt-0.5">
+                          <Building2 className="w-3 h-3" />{(s.formateurUniversite ?? "").split(" - ")[0]}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-xs text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
+                      S'inscrire <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { ArrowRight, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useLanguage, type Lang } from "@/contexts/language-context";
+import { useAuth } from "@/contexts/auth-context";
 
 const LANGS: { code: Lang; label: string }[] = [
   { code: "fr", label: "FR" },
@@ -12,6 +12,8 @@ const LANGS: { code: Lang; label: string }[] = [
 
 export function Navbar() {
   const { t, lang, setLang } = useLanguage();
+  const { user } = useAuth();
+  const [, navigate] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -50,9 +52,7 @@ export function Navbar() {
                 onClick={() => setLang(code)}
                 data-testid={`lang-${code}`}
                 className={`px-2.5 py-1 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
-                  lang === code
-                    ? "bg-primary text-white"
-                    : "text-muted-foreground hover:text-white"
+                  lang === code ? "bg-primary text-white" : "text-muted-foreground hover:text-white"
                 }`}
               >
                 {label}
@@ -60,10 +60,23 @@ export function Navbar() {
             ))}
           </div>
 
-          <Button variant="default" size="sm" className="rounded-full bg-white text-black hover:bg-white/90 whitespace-nowrap shrink-0" data-testid="button-nav-cta">
-            {t.nav.cta}
-            <ArrowRight className="w-4 h-4 ml-1" />
-          </Button>
+          {user ? (
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="h-10 px-5 rounded-full bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors whitespace-nowrap shrink-0 flex items-center gap-2"
+              data-testid="button-nav-cta"
+            >
+              Mon espace <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate("/sessions")}
+              className="h-10 px-5 rounded-full bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors whitespace-nowrap shrink-0 flex items-center gap-2"
+              data-testid="button-nav-cta"
+            >
+              {t.nav.cta} <ArrowRight className="w-4 h-4" />
+            </button>
+          )}
         </nav>
 
         <button
@@ -93,9 +106,7 @@ export function Navbar() {
                 key={code}
                 onClick={() => setLang(code)}
                 className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-                  lang === code
-                    ? "bg-primary border-primary text-white"
-                    : "border-white/20 text-muted-foreground hover:text-white"
+                  lang === code ? "bg-primary border-primary text-white" : "border-white/20 text-muted-foreground hover:text-white"
                 }`}
               >
                 {label}
@@ -103,9 +114,12 @@ export function Navbar() {
             ))}
           </div>
 
-          <Button variant="default" className="w-full mt-2 rounded-none bg-primary text-primary-foreground">
-            {t.nav.cta}
-          </Button>
+          <button
+            onClick={() => { setMobileMenuOpen(false); navigate(user ? "/dashboard" : "/sessions"); }}
+            className="w-full mt-2 h-12 rounded-full bg-white text-black font-medium"
+          >
+            {user ? "Mon espace" : t.nav.cta}
+          </button>
         </div>
       )}
     </header>
