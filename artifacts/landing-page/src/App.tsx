@@ -11,6 +11,8 @@ import ForgotPassword from "@/pages/auth/forgot-password";
 import ResetPassword from "@/pages/auth/reset-password";
 import Dashboard from "@/pages/dashboard";
 import Sessions from "@/pages/sessions";
+import ChoisirMode from "@/pages/choisir-mode";
+import TrouverFormateur from "@/pages/trouver-formateur";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { LanguageProvider } from "@/contexts/language-context";
@@ -18,9 +20,11 @@ import { AuthProvider } from "@/contexts/auth-context";
 
 const queryClient = new QueryClient();
 
+const STANDALONE_PATHS = ["/auth", "/dashboard", "/sessions", "/choisir", "/trouver-formateur"];
+
 function Router() {
   const [location] = useLocation();
-  const isStandalone = location.startsWith("/auth") || location === "/dashboard" || location === "/sessions";
+  const isStandalone = STANDALONE_PATHS.some(p => location === p || location.startsWith(p + "/") || location.startsWith("/auth"));
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground dark">
@@ -29,6 +33,8 @@ function Router() {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/sessions" component={Sessions} />
+          <Route path="/choisir" component={ChoisirMode} />
+          <Route path="/trouver-formateur" component={TrouverFormateur} />
           <Route path="/auth" component={RoleSelect} />
           <Route path="/auth/register" component={Register} />
           <Route path="/auth/login" component={Login} />
