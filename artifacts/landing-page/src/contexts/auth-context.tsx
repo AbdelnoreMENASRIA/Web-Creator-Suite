@@ -26,7 +26,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const API_BASE = "/api";
+// Utiliser VITE_API_URL en production (défini lors du build Render),
+// sinon utiliser le chemin relatif /api (compatible avec proxy ou same-origin)
+const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
