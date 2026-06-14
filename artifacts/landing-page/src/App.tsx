@@ -15,6 +15,8 @@ import ChoisirMode from "@/pages/choisir-mode";
 import TrouverFormateur from "@/pages/trouver-formateur";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { Logo } from "@/components/logo";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { LanguageProvider } from "@/contexts/language-context";
 import { AuthProvider } from "@/contexts/auth-context";
 
@@ -29,6 +31,21 @@ function Router() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground dark">
       {!isStandalone && <Navbar />}
+      
+      {/* Logo - visible on standalone pages */}
+      {isStandalone && (
+        <div className="fixed top-6 left-6 z-40">
+          <Logo />
+        </div>
+      )}
+      
+      {/* Language Switcher - visible on standalone pages */}
+      {isStandalone && (
+        <div className="fixed top-6 right-6 z-40">
+          <LanguageSwitcher />
+        </div>
+      )}
+      
       <main className="flex-1">
         <Switch>
           <Route path="/" component={Home} />

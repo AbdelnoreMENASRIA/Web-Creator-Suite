@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { useAuth, AuthUser } from "@/contexts/auth-context";
+import { Messaging } from "@/components/messaging";
 import {
   GraduationCap, LogOut, Edit3, Save, X, Users, User,
   BookOpen, Building2, Mail, Hash, Calendar, Briefcase, BadgeCheck,
@@ -42,7 +43,30 @@ interface Notif {
   id: string; type: string; message: string; isRead: boolean;
   relatedId?: string | null; createdAt: string;
 }
-type Tab = "profil" | "sessions" | "demandes" | "apprenants" | "notifications";
+interface Message {
+  id: string;
+  senderId: string;
+  senderName: string;
+  content: string;
+  attachments?: { type: "pdf" | "link"; name: string; url: string }[];
+  createdAt: string;
+  isRead: boolean;
+}
+interface SessionInscription {
+  id: string;
+  sessionId: string;
+  sessionTitle: string;
+  formateurId: string;
+  formateurName: string;
+  specialiteCible: string;
+  dateSession: string;
+  heureDebut: string;
+  dureeMinutes: number;
+  lienVideo?: string;
+  inscritAt: string;
+  messagingStatus: "allowed" | "blocked" | "pending";
+}
+type Tab = "profil" | "sessions" | "demandes" | "apprenants" | "notifications" | "messages";
 
 /* ─── Helpers ──────────────────────────────────────────────── */
 function StatusBadge({ statut }: { statut: string }) {
@@ -130,6 +154,12 @@ export default function Dashboard() {
   const [notifs, setNotifs] = useState<Notif[]>([]);
   const [unread, setUnread] = useState(0);
 
+  // Messages & Inscriptions (Apprenants)
+  const [sessionInscriptions, setSessionInscriptions] = useState<SessionInscription[]>([]);
+  const [loadingInscriptions, setLoadingInscriptions] = useState(false);
+  const [selectedConversation, setSelectedConversation] = useState<SessionInscription | null>(null);
+  const [conversationMessages, setConversationMessages] = useState<Message[]>([]);
+
   useEffect(() => {
     if (!user) { navigate("/auth"); return; }
     setForm({
@@ -140,6 +170,7 @@ export default function Dashboard() {
     });
     const isFormateur = user.role === "formateur";
     if (isFormateur) { fetchSessions(); fetchApprenants(); setActiveTab("sessions"); }
+    else { fetchSessionInscriptions(); setActiveTab("messages"); }
     fetchDemandes();
     fetchNotifs();
   }, [user]);
@@ -184,6 +215,67 @@ export default function Dashboard() {
       setNotifs(d.notifications);
       setUnread(d.notifications.filter((n: Notif) => !n.isRead).length);
     }
+  };
+
+  const fetchSessionInscriptions = async () => {
+    if (!token || user?.role !== "apprenant") return;
+    setLoadingInscriptions(true);
+    try {
+      const res = await fetch("/api/session-inscriptions", { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) { const d = await res.json(); setSessionInscriptions(d.inscriptions); }
+    } finally { setLoadingInscriptions(false); }
+  };
+
+  const fetchConversationMessages = async (sessionId: string, formateurId: string) => {
+    if (!token) return;
+    try {
+      const res = await fetch(`/api/messages/${sessionId}/${formateurId}`, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) { const d = await res.json(); setConversationMessages(d.messages); }
+    } catch (e) { console.error(e); }
+  };
+
+  const handleSendMessage = async (content: string, attachments: { type: "pdf" | "link"; name: string; url: string }[]) => {
+    if (!token || !selectedConversation) return;
+    try {
+      const res = await fetch(`/api/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          sessionId: selectedConversation.sessionId,
+          recipientId: selectedConversation.formateurId,
+          content,
+          attachments,
+        }),
+      });
+      if (res.ok) {
+        const msg = await res.json();
+        setConversationMessages([...conversationMessages, msg.message]);
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  const handleAllowMessaging = async () => {
+    if (!token || !selectedConversation) return;
+    try {
+      await fetch(`/api/session-inscriptions/${selectedConversation.id}/allow-messaging`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSelectedConversation({ ...selectedConversation, messagingStatus: "allowed" });
+      setSessionInscriptions(sessionInscriptions.map(s => s.id === selectedConversation.id ? { ...s, messagingStatus: "allowed" } : s));
+    } catch (e) { console.error(e); }
+  };
+
+  const handleBlockMessaging = async () => {
+    if (!token || !selectedConversation) return;
+    try {
+      await fetch(`/api/session-inscriptions/${selectedConversation.id}/block-messaging`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSelectedConversation({ ...selectedConversation, messagingStatus: "blocked" });
+      setSessionInscriptions(sessionInscriptions.map(s => s.id === selectedConversation.id ? { ...s, messagingStatus: "blocked" } : s));
+    } catch (e) { console.error(e); }
   };
 
   const markAllRead = async () => {
@@ -311,7 +403,10 @@ export default function Dashboard() {
     ...(isFormateur ? [{ id: "sessions" as Tab, label: "Mes sessions", icon: <Video className="w-4 h-4" /> }] : []),
     ...(isFormateur
       ? [{ id: "demandes" as Tab, label: "Demandes reçues", icon: <MessageSquare className="w-4 h-4" />, badge: receivedRequests.filter(r => r.statut === "en_attente").length }]
-      : [{ id: "demandes" as Tab, label: "Mes demandes", icon: <MessageSquare className="w-4 h-4" /> }]),
+      : [
+        { id: "messages" as Tab, label: "Messages", icon: <MessageSquare className="w-4 h-4" /> },
+        { id: "demandes" as Tab, label: "Mes demandes", icon: <BookOpen className="w-4 h-4" /> }
+      ]),
     { id: "notifications" as Tab, label: "Notifications", icon: <Bell className="w-4 h-4" />, badge: unread },
     { id: "profil" as Tab, label: "Mon profil", icon: <User className="w-4 h-4" /> },
     ...(isFormateur ? [{ id: "apprenants" as Tab, label: "Apprenants", icon: <Users className="w-4 h-4" /> }] : []),
@@ -496,6 +591,83 @@ export default function Dashboard() {
                     })}
                   </div>
                 )}
+            </motion.div>
+          )}
+
+          {/* ── MESSAGES (Apprenants) ─────────────────────────────────── */}
+          {activeTab === "messages" && !isFormateur && (
+            <motion.div key="messages" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Liste des conversations */}
+                <div className="lg:col-span-1">
+                  <h2 className="text-lg font-bold text-white mb-4">Mes conversations</h2>
+                  {loadingInscriptions ? (
+                    <div className="flex items-center gap-3 text-muted-foreground py-6"><Loader2 className="w-5 h-5 animate-spin" /> Chargement...</div>
+                  ) : sessionInscriptions.length === 0 ? (
+                    <div className="text-center py-6 rounded-2xl border border-white/5 bg-card text-muted-foreground">
+                      <MessageSquare className="w-10 h-10 mx-auto mb-2 opacity-20" />
+                      <p className="text-sm font-medium text-white mb-1">Aucune session</p>
+                      <p className="text-xs mb-4">Inscrivez-vous à une session pour communiquer</p>
+                      <button onClick={() => navigate("/sessions")}
+                        className="inline-flex items-center gap-2 h-9 px-4 bg-white text-black rounded-full text-xs font-medium hover:bg-white/90 transition-colors">
+                        Voir les sessions <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {sessionInscriptions.map((inscr) => (
+                        <motion.button
+                          key={inscr.id}
+                          onClick={() => {
+                            setSelectedConversation(inscr);
+                            fetchConversationMessages(inscr.sessionId, inscr.formateurId);
+                          }}
+                          whileHover={{ scale: 1.02 }}
+                          className={`w-full text-left rounded-2xl border p-3 transition-all ${
+                            selectedConversation?.id === inscr.id
+                              ? "border-primary bg-primary/10"
+                              : "border-white/5 bg-card hover:border-primary/30"
+                          }`}
+                        >
+                          <div className="font-medium text-white text-sm truncate">{inscr.sessionTitle}</div>
+                          <div className="text-xs text-muted-foreground truncate">{inscr.formateurName}</div>
+                          <div className="flex items-center gap-1 text-xs text-white/40 mt-1">
+                            {inscr.messagingStatus === "allowed" && <Check className="w-3 h-3 text-green-400" />}
+                            {inscr.messagingStatus === "blocked" && <X className="w-3 h-3 text-red-400" />}
+                            {inscr.messagingStatus === "pending" && <Clock className="w-3 h-3 text-yellow-400" />}
+                            <span className="text-xs">
+                              {inscr.messagingStatus === "allowed" ? "Autorisé" : inscr.messagingStatus === "blocked" ? "Bloqué" : "En attente"}
+                            </span>
+                          </div>
+                        </motion.button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Interface de messagerie */}
+                <div className="lg:col-span-2">
+                  {selectedConversation ? (
+                    <Messaging
+                      sessionId={selectedConversation.sessionId}
+                      sessionTitle={selectedConversation.sessionTitle}
+                      recipientId={selectedConversation.formateurId}
+                      recipientName={selectedConversation.formateurName}
+                      isFormateur={false}
+                      messages={conversationMessages}
+                      onSendMessage={handleSendMessage}
+                      messagingStatus={selectedConversation.messagingStatus}
+                    />
+                  ) : (
+                    <div className="h-[600px] rounded-3xl border border-white/10 bg-card flex items-center justify-center">
+                      <div className="text-center text-muted-foreground">
+                        <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                        <p className="text-sm">Sélectionnez une conversation</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </motion.div>
           )}
 

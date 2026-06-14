@@ -3,6 +3,8 @@ import { Link, useLocation } from "wouter";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { useLanguage, type Lang } from "@/contexts/language-context";
 import { useAuth } from "@/contexts/auth-context";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { Logo } from "@/components/logo";
 
 const LANGS: { code: Lang; label: string }[] = [
   { code: "fr", label: "FR" },
@@ -30,9 +32,7 @@ export function Navbar() {
       }`}
     >
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-        <Link href="/" className="font-serif text-xl font-bold tracking-tighter text-white" data-testid="link-logo">
-          TeachIn<span className="text-primary">English</span>
-        </Link>
+        <Logo />
 
         <nav className="hidden md:flex items-center gap-6">
           <Link href="#programme" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap" data-testid="link-programme">
@@ -45,20 +45,7 @@ export function Navbar() {
             {t.nav.temoignages}
           </Link>
 
-          <div className="flex items-center gap-0.5 border border-white/10 rounded-full px-1 py-1 shrink-0" data-testid="lang-switcher">
-            {LANGS.map(({ code, label }) => (
-              <button
-                key={code}
-                onClick={() => setLang(code)}
-                data-testid={`lang-${code}`}
-                className={`px-2.5 py-1 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
-                  lang === code ? "bg-primary text-white" : "text-muted-foreground hover:text-white"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+          <LanguageSwitcher />
 
           {user ? (
             <button

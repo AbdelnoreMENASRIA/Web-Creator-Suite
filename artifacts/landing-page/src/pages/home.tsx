@@ -118,7 +118,14 @@ export default function Home() {
                 {t.hero.ctaPrimary}
                 <ArrowRight className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRtl ? "rotate-180" : ""}`} />
               </button>
-              <button data-testid="button-discover" className="h-14 px-8 bg-transparent text-white border border-white/20 rounded-full font-medium text-lg hover:bg-white/10 transition-colors">
+              <button 
+                data-testid="button-discover" 
+                onClick={() => {
+                  const element = document.getElementById('programme');
+                  if (element) element.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="h-14 px-8 bg-transparent text-white border border-white/20 rounded-full font-medium text-lg hover:bg-white/10 transition-colors"
+              >
                 {t.hero.ctaSecondary}
               </button>
             </motion.div>
