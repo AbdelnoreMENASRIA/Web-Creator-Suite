@@ -25,6 +25,14 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setMobileMenuOpen(false);
+    }
+  };
+
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
@@ -35,15 +43,27 @@ export function Navbar() {
         <Logo />
 
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="#programme" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap" data-testid="link-programme">
+          <button
+            onClick={() => scrollToSection('programme')}
+            className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap"
+            data-testid="link-programme"
+          >
             {t.nav.programme}
-          </Link>
-          <Link href="#pour-qui" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap" data-testid="link-pour-qui">
+          </button>
+          <button
+            onClick={() => scrollToSection('pour-qui')}
+            className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap"
+            data-testid="link-pour-qui"
+          >
             {t.nav.pourQui}
-          </Link>
-          <Link href="#temoignages" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap" data-testid="link-temoignages">
+          </button>
+          <button
+            onClick={() => scrollToSection('temoignages')}
+            className="text-sm font-medium text-muted-foreground hover:text-white transition-colors whitespace-nowrap"
+            data-testid="link-temoignages"
+          >
             {t.nav.temoignages}
-          </Link>
+          </button>
 
           <LanguageSwitcher />
 
@@ -77,15 +97,24 @@ export function Navbar() {
 
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-20 left-0 w-full bg-background border-b border-border p-6 flex flex-col gap-4 shadow-2xl">
-          <Link href="#programme" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
+          <button
+            onClick={() => scrollToSection('programme')}
+            className="text-lg font-medium text-white text-left"
+          >
             {t.nav.programme}
-          </Link>
-          <Link href="#pour-qui" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
+          </button>
+          <button
+            onClick={() => scrollToSection('pour-qui')}
+            className="text-lg font-medium text-white text-left"
+          >
             {t.nav.pourQui}
-          </Link>
-          <Link href="#temoignages" className="text-lg font-medium text-white" onClick={() => setMobileMenuOpen(false)}>
+          </button>
+          <button
+            onClick={() => scrollToSection('temoignages')}
+            className="text-lg font-medium text-white text-left"
+          >
             {t.nav.temoignages}
-          </Link>
+          </button>
 
           <div className="flex items-center gap-2 pt-2">
             {LANGS.map(({ code, label }) => (
