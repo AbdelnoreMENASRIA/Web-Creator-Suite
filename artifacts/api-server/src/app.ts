@@ -1,4 +1,4 @@
-import express, { type Express } from "express";
+import express, { type Express, type Request, type Response, type NextFunction } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
@@ -66,5 +66,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", router);
+
+// Global error handler - catches all unhandled errors
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  logger.error({ 
+    err, 
+    message: err.message, 
+    stack: err.stack,
+    url: req.url,
+    method: req.method,
+  }, "Unhandled error");
+
+  // Don't expose error details in production
+  const message = process.env.NODE_ENV === "production" 
+    ? "Internal server error" 
+    : err.message || "Internal server error";
+
+  res.status(err.status || 500).json({ 
+    error: message,
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack })
+  });
+});
 
 export default app;
