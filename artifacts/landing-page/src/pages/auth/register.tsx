@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { GraduationCap, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useLocation, useSearch } from "wouter";
 import { useAuth } from "@/contexts/auth-context";
+import { apiCallJson } from "@/lib/api-client";
 
 const ALGERIAN_UNIVERSITIES = [
   "USTHB - Université des Sciences et de la Technologie Houari Boumediene",
@@ -78,9 +79,8 @@ export default function Register() {
     }
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/register", {
+      const data = await apiCallJson("/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           role,
           prenom: form.prenom,
@@ -96,15 +96,10 @@ export default function Register() {
           password: form.password,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Erreur lors de l'inscription");
-        return;
-      }
       login(data.token, data.user);
       navigate("/dashboard");
-    } catch {
-      setError("Erreur réseau, veuillez réessayer");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur réseau, veuillez réessayer");
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { GraduationCap, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useLocation, useSearch } from "wouter";
 import { useAuth } from "@/contexts/auth-context";
+import { apiCallJson } from "@/lib/api-client";
 
 export default function Login() {
   const searchString = useSearch();
@@ -22,20 +23,14 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/login", {
+      const data = await apiCallJson("/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Erreur de connexion");
-        return;
-      }
       login(data.token, data.user);
       navigate("/dashboard");
-    } catch {
-      setError("Erreur réseau, veuillez réessayer");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur de connexion");
     } finally {
       setLoading(false);
     }

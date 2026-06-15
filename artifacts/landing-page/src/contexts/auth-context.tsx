@@ -26,9 +26,28 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Utiliser VITE_API_URL en production (défini lors du build Render),
-// sinon utiliser le chemin relatif /api (compatible avec proxy ou same-origin)
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+// Determine API base URL with proper fallback chain
+// 1. Use VITE_API_URL from build environment (Render injects this)
+// 2. Fallback to production Render URL
+// 3. Fallback to localhost for development
+const getApiBase = (): string => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  
+  // If VITE_API_URL is defined and not empty, use it
+  if (envUrl && envUrl.trim()) {
+    return envUrl;
+  }
+  
+  // Production fallback
+  if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+    return "https://teach-in-english-api.onrender.com";
+  }
+  
+  // Development fallback
+  return "http://localhost:10000";
+};
+
+const API_BASE = getApiBase();
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -40,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const res = await fetch(`${API_BASE}/auth/me`, {
         headers: { Authorization: `Bearer ${t}` },
+        credentials: "include",
       });
       if (res.ok) {
         const data = await res.json();
@@ -47,7 +67,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         logout();
       }
-    } catch {
+    } catch (err) {
+      console.error("Failed to refresh user:", err);
       logout();
     }
   };

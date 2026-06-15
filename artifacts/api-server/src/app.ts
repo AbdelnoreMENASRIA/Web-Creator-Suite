@@ -25,13 +25,20 @@ app.use(
     },
   }),
 );
+
 // Configure CORS to allow requests from production and development frontends
 const allowedOrigins = [
   "http://localhost:5173", // Local development
   "http://localhost:3000",  // Alternative local port
   "https://teach-in-english-front.onrender.com", // Production frontend on Render
-  process.env.FRONTEND_URL, // Environment variable for flexibility
-].filter(Boolean);
+];
+
+// Add FRONTEND_URL if defined and different
+if (process.env.FRONTEND_URL && process.env.FRONTEND_URL !== "https://teach-in-english-front.onrender.com") {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
+logger.info({ allowedOrigins }, "CORS allowed origins configured");
 
 app.use(
   cors({
@@ -43,9 +50,10 @@ app.use(
         callback(null, true);
       } else if (process.env.NODE_ENV === "development") {
         // In development, log but allow all origins
-        console.log(`CORS request from unlisted origin: ${origin}`);
+        logger.warn({ origin }, "CORS request from unlisted origin (development mode - allowed)");
         callback(null, true);
       } else {
+        logger.error({ origin, allowedOrigins }, "CORS blocked request from unauthorized origin");
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -53,6 +61,7 @@ app.use(
     optionsSuccessStatus: 200,
   }),
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
