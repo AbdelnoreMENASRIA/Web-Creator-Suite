@@ -1,35 +1,29 @@
 /**
- * Centralized API client with proper URL resolution
+ * Centralized API client with production URL hardcoded
  * Handles both development and production environments
  */
 
-// Determine the API base URL with fallback chain:
-// 1. Use VITE_API_URL from build environment (Render injects this)
-// 2. Fallback to production Render URL if on production domain
-// 3. Fallback to localhost for development
+// PRODUCTION API URL - Hardcoded to ensure it's always available
+const PRODUCTION_API_URL = "https://teach-in-english-api.onrender.com";
+
+// Determine the API base URL
 export function getApiBaseUrl(): string {
-  const envUrl = import.meta.env.VITE_API_URL as string | undefined;
-
-  // If VITE_API_URL is defined at build time, use it
-  if (envUrl && envUrl.trim() && envUrl !== "http://localhost:10000") {
-    return envUrl;
-  }
-
-  // Check if we're on a production domain
+  // Check if we're in development environment
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname;
-    const isProduction =
-      hostname !== "localhost" &&
-      hostname !== "127.0.0.1" &&
-      hostname !== "0.0.0.0";
+    const isDevelopment =
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "0.0.0.0";
 
-    if (isProduction) {
-      return "https://teach-in-english-api.onrender.com";
+    // Use localhost for development
+    if (isDevelopment) {
+      return "http://localhost:10000";
     }
   }
 
-  // Development fallback
-  return "http://localhost:10000";
+  // Always use the hardcoded production URL for any non-localhost environment
+  return PRODUCTION_API_URL;
 }
 
 const API_BASE = getApiBaseUrl();
@@ -55,6 +49,8 @@ export async function apiCall(
     headers.Authorization = `Bearer ${token}`;
   }
 
+  console.log(`API Call: ${options.method || "GET"} ${url}`);
+
   const response = await fetch(url, {
     ...options,
     headers,
@@ -71,11 +67,17 @@ export async function apiCallJson<T>(
   const response = await apiCall(endpoint, options);
   
   if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.error || `API error: ${response.status}`);
+    let errorMessage = `HTTP ${response.status}`;
+    try {
+      const error = await response.json();
+      errorMessage = error.error || errorMessage;
+    } catch (e) {
+      // If response is not JSON, use the HTTP status message
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();
 }
 
-export { API_BASE };
+export { API_BASE, PRODUCTION_API_URL };

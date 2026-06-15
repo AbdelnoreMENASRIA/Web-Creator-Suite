@@ -26,25 +26,25 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Determine API base URL with proper fallback chain
-// 1. Use VITE_API_URL from build environment (Render injects this)
-// 2. Fallback to production Render URL
-// 3. Fallback to localhost for development
+// Hardcoded production URL to ensure it always works
+const PRODUCTION_API_URL = "https://teach-in-english-api.onrender.com";
+
+// Determine API base URL - use production URL for any non-localhost environment
 const getApiBase = (): string => {
-  const envUrl = import.meta.env.VITE_API_URL;
-  
-  // If VITE_API_URL is defined and not empty, use it
-  if (envUrl && envUrl.trim()) {
-    return envUrl;
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+    const isDevelopment =
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "0.0.0.0";
+
+    if (isDevelopment) {
+      return "http://localhost:10000";
+    }
   }
-  
-  // Production fallback
-  if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
-    return "https://teach-in-english-api.onrender.com";
-  }
-  
-  // Development fallback
-  return "http://localhost:10000";
+
+  // Default to production URL
+  return PRODUCTION_API_URL;
 };
 
 const API_BASE = getApiBase();
