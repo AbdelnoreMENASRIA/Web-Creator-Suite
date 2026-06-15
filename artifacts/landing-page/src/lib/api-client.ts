@@ -4,7 +4,7 @@
  */
 
 // PRODUCTION API URL - Hardcoded to ensure it's always available
-const PRODUCTION_API_URL = "https://teach-in-english-api.onrender.com";
+const PRODUCTION_API_URL = "https://teach-in-english-api.onrender.com/api";
 
 // Determine the API base URL
 export function getApiBaseUrl(): string {

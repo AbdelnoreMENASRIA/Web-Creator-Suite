@@ -27,7 +27,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 // Hardcoded production URL to ensure it always works
-const PRODUCTION_API_URL = "https://teach-in-english-api.onrender.com";
+const PRODUCTION_API_URL = "https://teach-in-english-api.onrender.com/api";
 
 // Determine API base URL - use production URL for any non-localhost environment
 const getApiBase = (): string => {
