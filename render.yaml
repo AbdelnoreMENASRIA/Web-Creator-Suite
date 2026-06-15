@@ -1,3 +1,7 @@
+# Teach In English - Render Deployment Configuration
+# Last Updated: 2026-06-15
+# API Backend is now deployed at: https://teach-in-english-api.onrender.com
+
 services:
   # Frontend Landing Page
   - type: web
