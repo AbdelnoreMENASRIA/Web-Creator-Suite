@@ -48,4 +48,4 @@ services:
       - key: FRONTEND_URL
         value: https://teach-in-english-front.onrender.com
       - key: DATABASE_URL
-        value: postgresql://teach_in_english_db_user:s4n06VD2kSk8j196ejvYi1z9UADqI0Wn@dpg-d8nkpf37uimc73a0k1sg-a.oregon-postgres.render.com/teach_in_english_db
+        value: postgresql://teach_in_english_db_user:s4n06VD2kSk8j196ejvYi1z9UADqI0Wn@dpg-d8nkpf37uimc73a0k1sg-a.oregon-postgres.render.com/teach_in_english_db?sslmode=require
