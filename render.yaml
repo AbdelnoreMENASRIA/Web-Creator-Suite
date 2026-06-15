@@ -34,9 +34,10 @@ services:
     runtime: node
     plan: free
     buildCommand: |
-      cd artifacts/api-server && \
       npm install -g pnpm && \
       pnpm install --frozen-lockfile && \
+      pnpm -F @workspace/db exec drizzle-kit push --allow-dirty && \
+      cd artifacts/api-server && \
       pnpm run build
     startCommand: cd artifacts/api-server && npm run start
     envVars:
