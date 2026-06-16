@@ -1,5 +1,5 @@
 # Teach In English - Render Deployment Configuration
-# Last Updated: 2026-06-15
+# Last Updated: 2026-06-16
 # API Backend is now deployed at: https://teach-in-english-api.onrender.com
 
 services:
@@ -36,7 +36,7 @@ services:
     buildCommand: |
       npm install -g pnpm && \
       pnpm install --frozen-lockfile && \
-      pnpm -F @workspace/db exec drizzle-kit push --allow-dirty && \
+      DATABASE_URL="postgresql://teach_in_english_db_user:s4n06VD2kSk8j196ejvYi1z9UADqI0Wn@dpg-d8nkpf37uimc73a0k1sg-a.oregon-postgres.render.com/teach_in_english_db?sslmode=require" pnpm -F @workspace/db run push && \
       cd artifacts/api-server && \
       pnpm run build
     startCommand: cd artifacts/api-server && npm run start
