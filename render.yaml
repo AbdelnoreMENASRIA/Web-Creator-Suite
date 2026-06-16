@@ -34,7 +34,6 @@ services:
     runtime: node
     plan: free
     buildCommand: |
-      npm install -g pnpm && \
       pnpm install --frozen-lockfile && \
       DATABASE_URL="postgresql://teach_in_english_db_user:s4n06VD2kSk8j196ejvYi1z9UADqI0Wn@dpg-d8nkpf37uimc73a0k1sg-a.oregon-postgres.render.com/teach_in_english_db?sslmode=require" pnpm -F @workspace/db run push && \
       cd artifacts/api-server && \
