@@ -35,7 +35,7 @@ services:
     plan: free
     buildCommand: |
       pnpm install --frozen-lockfile && \
-      DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.cykzrclmccvdbywvftwj.supabase.co:5432/postgres?sslmode=require" pnpm -F @workspace/db run push && \
+      DATABASE_URL="postgresql://postgres:Abdlenormen01%40@db.cykzrclmccvdbywvftwj.supabase.co:5432/postgres?sslmode=require" pnpm -F @workspace/db run push && \
       cd artifacts/api-server && \
       pnpm run build
     startCommand: cd artifacts/api-server && npm run start
@@ -47,4 +47,4 @@ services:
       - key: FRONTEND_URL
         value: https://teach-in-english-front.onrender.com
       - key: DATABASE_URL
-        value: postgresql://postgres:[YOUR-PASSWORD]@db.cykzrclmccvdbywvftwj.supabase.co:5432/postgres?sslmode=require
+        value: postgresql://postgres:Abdlenormen01%40@db.cykzrclmccvdbywvftwj.supabase.co:5432/postgres?sslmode=require
