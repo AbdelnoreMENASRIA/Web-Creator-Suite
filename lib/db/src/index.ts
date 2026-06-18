@@ -22,6 +22,8 @@ if (isProduction) {
 export const pool = new Pool({ 
   connectionString: dbUrl.toString(),
   ssl: isProduction ? { rejectUnauthorized: false } : false,
+  // Force IPv4 to avoid IPv6 connectivity issues on Render
+  family: 4,
 });
 
 export const db = drizzle(pool, { schema });

@@ -38,4 +38,4 @@ services:
       - key: FRONTEND_URL
         value: https://teach-in-english-front.onrender.com
       - key: DATABASE_URL
-        value: postgresql://postgres:Abdlenormen01%40@db.cykzrclmccvdbywvftwj.supabase.co:5432/postgres?sslmode=require&inet_family=ipv4
+        value: postgresql://postgres:Abdlenormen01%40@db.cykzrclmccvdbywvftwj.supabase.co:5432/postgres?sslmode=require

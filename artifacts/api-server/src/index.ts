@@ -20,7 +20,9 @@ if (Number.isNaN(port) || port <= 0) {
 async function runMigrations() {
   try {
     logger.info("Running database migrations...");
-    execSync("cd ../../lib/db && npx drizzle-kit push", { cwd: process.cwd(), stdio: "inherit" });
+    // Use absolute path from artifacts/api-server to lib/db
+    const dbPath = "./lib/db";
+    execSync(`npx drizzle-kit push --config ${dbPath}/drizzle.config.ts`, { stdio: "inherit" });
     logger.info("Migrations completed successfully");
   } catch (err) {
     logger.error({ err }, "Migration failed, but continuing server startup");
