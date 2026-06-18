@@ -1,5 +1,6 @@
 # Teach In English - Render Deployment Configuration
 # Last Updated: 2026-06-16
+# Now using Supabase PostgreSQL (Free, unlimited)
 # API Backend is now deployed at: https://teach-in-english-api.onrender.com
 
 services:
@@ -10,7 +11,6 @@ services:
     plan: free
     buildCommand: |
       cd artifacts/landing-page && \
-      npm install -g pnpm && \
       pnpm install --frozen-lockfile && \
       PORT=3000 BASE_PATH="/" VITE_API_URL="https://teach-in-english-api.onrender.com" pnpm run build
     startCommand: npm install -g http-server && http-server artifacts/landing-page/dist -p 3000 --gzip
@@ -35,7 +35,7 @@ services:
     plan: free
     buildCommand: |
       pnpm install --frozen-lockfile && \
-      DATABASE_URL="postgresql://teach_in_english_db_user:s4n06VD2kSk8j196ejvYi1z9UADqI0Wn@dpg-d8nkpf37uimc73a0k1sg-a.oregon-postgres.render.com/teach_in_english_db?sslmode=require" pnpm -F @workspace/db run push && \
+      DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.cykzrclmccvdbywvftwj.supabase.co:5432/postgres?sslmode=require" pnpm -F @workspace/db run push && \
       cd artifacts/api-server && \
       pnpm run build
     startCommand: cd artifacts/api-server && npm run start
@@ -47,4 +47,4 @@ services:
       - key: FRONTEND_URL
         value: https://teach-in-english-front.onrender.com
       - key: DATABASE_URL
-        value: postgresql://teach_in_english_db_user:s4n06VD2kSk8j196ejvYi1z9UADqI0Wn@dpg-d8nkpf37uimc73a0k1sg-a.oregon-postgres.render.com/teach_in_english_db?sslmode=require
+        value: postgresql://postgres:[YOUR-PASSWORD]@db.cykzrclmccvdbywvftwj.supabase.co:5432/postgres?sslmode=require
