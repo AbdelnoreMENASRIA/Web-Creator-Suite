@@ -1,7 +1,5 @@
 # Teach In English - Render Deployment Configuration
-# Last Updated: 2026-06-16
 # Now using Supabase PostgreSQL (Free, unlimited)
-# API Backend is now deployed at: https://teach-in-english-api.onrender.com
 
 services:
   # Frontend Landing Page
@@ -9,10 +7,7 @@ services:
     name: teach-in-english-front
     runtime: node
     plan: free
-    buildCommand: |
-      cd artifacts/landing-page && \
-      pnpm install --frozen-lockfile && \
-      PORT=3000 BASE_PATH="/" VITE_API_URL="https://teach-in-english-api.onrender.com" pnpm run build
+    buildCommand: cd artifacts/landing-page && pnpm install --frozen-lockfile && PORT=3000 BASE_PATH="/" VITE_API_URL="https://teach-in-english-api.onrender.com" pnpm run build
     startCommand: npm install -g http-server && http-server artifacts/landing-page/dist -p 3000 --gzip
     envVars:
       - key: NODE_ENV
@@ -33,11 +28,7 @@ services:
     name: teach-in-english-api
     runtime: node
     plan: free
-    buildCommand: |
-      pnpm install --frozen-lockfile && \
-      DATABASE_URL="postgresql://postgres:Abdlenormen01%40@db.cykzrclmccvdbywvftwj.supabase.co:5432/postgres?sslmode=require" pnpm -F @workspace/db run push && \
-      cd artifacts/api-server && \
-      pnpm run build
+    buildCommand: pnpm install --frozen-lockfile && pnpm -F @workspace/db run push && cd artifacts/api-server && pnpm run build
     startCommand: cd artifacts/api-server && npm run start
     envVars:
       - key: NODE_ENV
