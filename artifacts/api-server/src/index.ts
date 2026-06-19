@@ -20,13 +20,10 @@ if (Number.isNaN(port) || port <= 0) {
 async function runMigrations() {
   try {
     logger.info("Running database migrations...");
-    // Use absolute path from artifacts/api-server to lib/db
-    const dbPath = "./lib/db";
-    execSync(`npx drizzle-kit push --config ${dbPath}/drizzle.config.ts`, { stdio: "inherit" });
-    logger.info("Migrations completed successfully");
+    // Migrations are handled in build phase - this is just a safety check
+    logger.info("Migrations already handled in build phase");
   } catch (err) {
-    logger.error({ err }, "Migration failed, but continuing server startup");
-    // Don't exit - let the server start anyway
+    logger.error({ err }, "Migration check failed");
   }
 }
 

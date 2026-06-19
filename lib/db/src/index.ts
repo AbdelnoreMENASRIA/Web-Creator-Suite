@@ -13,18 +13,26 @@ if (!process.env.DATABASE_URL) {
 // Parse DATABASE_URL and ensure SSL is required for production
 const dbUrl = new URL(process.env.DATABASE_URL);
 const isProduction = process.env.NODE_ENV === "production";
+const host = dbUrl.hostname;
 
 // Force SSL/TLS for production (Render requires this)
 if (isProduction) {
   dbUrl.searchParams.set("sslmode", "require");
 }
 
-export const pool = new Pool({ 
+// Create pool with IPv4 preference for production (Render)
+const poolConfig: any = { 
   connectionString: dbUrl.toString(),
   ssl: isProduction ? { rejectUnauthorized: false } : false,
-  // Force IPv4 to avoid IPv6 connectivity issues on Render
-  family: 4,
-});
+};
+
+if (isProduction) {
+  // Prioritize IPv4 over IPv6 to avoid Render IPv6 issues
+  poolConfig.host = host;
+  poolConfig.family = 4;
+}
+
+export const pool = new Pool(poolConfig);
 
 export const db = drizzle(pool, { schema });
 
