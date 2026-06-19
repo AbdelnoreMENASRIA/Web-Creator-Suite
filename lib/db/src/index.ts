@@ -13,23 +13,23 @@ if (!process.env.DATABASE_URL) {
 // Parse DATABASE_URL and ensure SSL is required for production
 const dbUrl = new URL(process.env.DATABASE_URL);
 const isProduction = process.env.NODE_ENV === "production";
-const host = dbUrl.hostname;
 
-// Force SSL/TLS for production (Render requires this)
+// Force SSL/TLS with verify-full for production (Render requires this)
 if (isProduction) {
-  dbUrl.searchParams.set("sslmode", "require");
+  dbUrl.searchParams.set("sslmode", "verify-full");
 }
 
-// Create pool with IPv4 preference for production (Render)
+// Create pool with IPv4 preference
 const poolConfig: any = { 
   connectionString: dbUrl.toString(),
-  ssl: isProduction ? { rejectUnauthorized: false } : false,
+  ssl: isProduction ? { rejectUnauthorized: true } : false,
 };
 
+// Force IPv4 and set connection timeouts
 if (isProduction) {
-  // Prioritize IPv4 over IPv6 to avoid Render IPv6 issues
-  poolConfig.host = host;
-  poolConfig.family = 4;
+  poolConfig.family = 4; // Prefer IPv4
+  poolConfig.statement_timeout = 30000; // 30s statement timeout
+  poolConfig.query_timeout = 30000; // 30s query timeout
 }
 
 export const pool = new Pool(poolConfig);
